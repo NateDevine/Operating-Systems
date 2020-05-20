@@ -1,0 +1,22 @@
+int available[1024][3];
+    int aindex=0;
+    for(int i=0;buf[i][1]>=100;i++){
+      if(buf[i][0]<=time && buf[i][0]>0){
+        for(int j=0;j<3;j++) available[aindex][j]=buf[i][j];
+        aindex++;
+        printf("%d\n", available[aindex-1][1]);
+      }
+      
+    }
+    if(aindex==0) continue;
+    int smallest=available[0][2];
+    for(int i=0;i<aindex-1;i++){
+      if(available[smallest][2]>available[i+1][2] && available[smallest][2]>0) smallest=i;
+    }
+    //if(available[smallest][2]<=0) break;
+    //printf("time left: %d\n", buf[available[smallest][1]-100][2]--);
+    if(buf[available[smallest][1]-100][2]==0){
+      printf("finished %d\n", available[smallest][1]);
+      done[dindex++]=buf[available[smallest][1]-100][1];
+    }
+    sched[sindex++]=available[smallest][1];

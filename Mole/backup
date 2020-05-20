@@ -1,0 +1,42 @@
+void *producer(int *id){
+//     sem_init(&items, 0, 1);
+//     sem_init(&spaces, 0, 1);
+    int temp;
+    //printf("%d: producer\n",*id);
+    while(1) { 
+        sem_wait(&spaces);
+        sem_wait(&items);
+        nthreads++;
+        for(int i=0;i<nthreads;i++){
+          if(buffer[i]==0){
+            temp=buffer[i];
+            buffer[i]=*id;
+          }
+        }
+        sem_post(&items);
+        //printf("%d: producer\n",*id);
+        printf("thread %d (producer) stored item %d in buffer\n", *id, *id);
+    }
+    //pthread_exit(0);
+}
+void *consumer(int *id){
+    while(1) { 
+        int temp;
+        while(1){
+          int r=rand() % (SPACES-1);
+          int t=buffer[r];
+          if(t){
+            temp=t;
+            buffer[r]=0;
+            break;
+          }
+        }
+        //printf("%d: consumer\n",*id);
+        sem_wait(&items);
+        sem_post(&items);
+        sem_post(&spaces);
+        //printf("%d: consumer\n",*id);
+        printf("thread %d (consumer) removed item %d in buffer\n", *id, temp);
+    }
+    //pthread_exit(0);
+}
